@@ -70,7 +70,8 @@ def grubbs(timeseries):
     len_series = len(series)
     threshold = scipy.stats.t.isf(.05 / (2 * len_series), len_series - 2)
     threshold_squared = threshold * threshold
-    grubbs_score = ((len_series - 1) / np.sqrt(len_series)) * np.sqrt(threshold_squared / (len_series - 2 + threshold_squared))
+    grubbs_score = ((len_series - 1) / np.sqrt(len_series)) * \
+        np.sqrt(threshold_squared / (len_series - 2 + threshold_squared))
 
     return z_score > grubbs_score
 
@@ -83,7 +84,8 @@ def first_hour_average(timeseries):
     """
 
     last_hour_threshold = time() - (86400 - 3600)
-    series = pandas.Series([x[1] for x in timeseries if x[0] < last_hour_threshold])
+    series = pandas.Series([x[1] for x in timeseries
+                            if x[0] < last_hour_threshold])
     mean = (series).mean()
     stdDev = (series).std()
     t = tail_avg(timeseries)
@@ -187,7 +189,7 @@ def histogram_bins(timeseries):
                     return True
             # Is it in the current bin?
             elif t >= bins[index] and t < bins[index + 1]:
-                    return True
+                return True
 
     return False
 
@@ -202,7 +204,8 @@ def ks_test(timeseries):
 
     hour_ago = time() - 3600
     ten_minutes_ago = time() - 600
-    reference = scipy.array([x[1] for x in timeseries if x[0] >= hour_ago and x[0] < ten_minutes_ago])
+    reference = scipy.array([x[1] for x in timeseries
+                            if x[0] >= hour_ago and x[0] < ten_minutes_ago])
     probe = scipy.array([x[1] for x in timeseries if x[0] >= ten_minutes_ago])
 
     if reference.size < 20 or probe.size < 20:
@@ -217,11 +220,13 @@ def ks_test(timeseries):
 
     return False
 
+
 def run_algorithms(timeseries, timeseries_name):
     """
     Iteratively run algorithms.
     """
-    __results__ = abspath(join(dirname( __file__ ), '..', 'results'))
+
+    __results__ = abspath(join(dirname(__file__), '..', 'results'))
 
     try:
         for algorithm in ALGORITHMS:
@@ -233,12 +238,13 @@ def run_algorithms(timeseries, timeseries_name):
             for index in range(10, len(timeseries)):
                 sliced = timeseries[:index]
                 anomaly = globals()[algorithm](sliced)
-                
+
                 # Point out the datapoint if it's anomalous
                 if anomaly:
                     plt.plot([index], [sliced[-1][1]], 'ro')
-                        
-            plt.savefig(__results__ + "/"+ algorithm + "-" + timeseries_name + ".png")
+
+            plt.savefig(join(__results__,
+                             algorithm + '-' + timeseries_name + '.png'))
             print algorithm
     except:
         print("Algorithm error: " + traceback.format_exc())
