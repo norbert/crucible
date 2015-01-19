@@ -5,7 +5,7 @@ import os
 from os.path import dirname, join, abspath, isfile
 from sys import exit
 import traceback
-from settings import ALGORITHMS
+from .settings import ALGORITHMS
 import json
 import shutil
 from os import getcwd, listdir, makedirs

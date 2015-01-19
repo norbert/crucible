@@ -7,7 +7,7 @@ import traceback
 import os
 from multiprocessing import Process
 from time import time
-from settings import ALGORITHMS
+from .settings import ALGORITHMS
 from os.path import dirname, join, abspath
 
 """
