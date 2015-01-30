@@ -1,5 +1,4 @@
 *.py[cod]
 .DS_Store
 
-/data
 /results

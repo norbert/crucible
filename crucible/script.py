@@ -19,9 +19,8 @@ class Crucible():
         """
         Called when the process intializes.
         """
-        __data__ = abspath(join(dirname(__file__), '..', 'data'))
-        files = [f for f in listdir(__data__)
-                 if isfile(join(__data__, f))]
+        __data__ = abspath(join(dirname(__file__), 'datasets', 'data'))
+        files = [f for f in listdir(__data__) if isfile(join(__data__, f))]
 
         # Spawn processes
         pids = []
@@ -29,8 +28,7 @@ class Crucible():
             if ts_name == ".DS_Store":
                 continue
 
-            __data__ = abspath(join(dirname(__file__), '..', 'data'))
-            with open(join(__data__ + "/" + ts_name), 'r') as f:
+            with open(join(__data__, ts_name), 'r') as f:
                 timeseries = json.loads(f.read())
                 p = Process(target=run_algorithms, args=(timeseries, ts_name))
                 pids.append(p)
